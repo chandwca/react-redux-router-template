@@ -2,18 +2,13 @@
   "users": [
     {
       "id": 1,
-      "name": "nike",
-      "email": "nike.01@gmail.com"
+      "name": "chetna",
+      "email": "chetnachandwani.01@gmail.com"
     },
     {
-      "id": 2,
-      "name": "adidas",
-      "email": "adidas@example.com "
-    },
-    {
-      "id": 3,
-      "name": "apple",
-      "email": "apple@example.com "
+      "name": "test",
+      "email": "test",
+      "id": 2
     }
   ]
 }

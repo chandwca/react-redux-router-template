@@ -1,2 +1,2 @@
-export const appName: string = "Example";
+export const appName: string = "Template";
 // export const appLogo: string = "";

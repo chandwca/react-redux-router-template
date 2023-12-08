@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addNewUser, deleteUserById, fetchUserData, selectAllUsers } from './usersSlice';
+import { addNewUser, deleteUserById, editUserByID, fetchUserData, selectAllUsers } from './usersSlice';
 import { RootState } from '../../app/store';
 import {
   Table,
@@ -30,8 +30,22 @@ const Users: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
+  const [editUserId, setEditUserId] = useState<number | null>(null);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (mode: 'add' | 'edit', userId?: number) => {
+    setModalMode(mode);
+    setEditUserId(userId || null);
+    if (mode === 'edit' && userId !== undefined && data && data.length > 0) {
+      const userToEdit = data.find((user) => user.id === userId);
+      if (userToEdit) {
+        setName(userToEdit.name);
+        setEmail(userToEdit.email);
+      }
+    } else {
+      setName('');
+      setEmail('');
+    }
     setModalOpen(true);
   };
 
@@ -46,6 +60,19 @@ const Users: React.FC = () => {
       handleCloseModal();
     } catch (error) {
       console.error('Error adding user:', error);
+    }
+  };
+  const handleEditUser = async () => {
+    try {
+      if (editUserId !== null) {
+        console.log(editUserId)
+        await dispatch(editUserByID({ userId: editUserId, name, email }) as any);
+      }
+    } catch (error) {
+      console.error('Error editing user:', error);
+    }
+    finally {
+      handleCloseModal();
     }
   };
   const handleDeleteUser = async (userId: number) => {
@@ -74,9 +101,8 @@ const Users: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-      <h2>User Data</h2>
       <div style={{ marginLeft: 'auto', marginTop: '16px' }}>
-        <Button variant="contained" color="primary" onClick={handleOpenModal} style={{ margin: '16px' }}>
+        <Button variant="contained" color="primary" onClick={() => handleOpenModal('add')}  style={{ margin: '16px' }}>
           Add User
         </Button>
       </div>
@@ -97,7 +123,7 @@ const Users: React.FC = () => {
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
-                <IconButton>
+                <IconButton onClick={() => handleOpenModal('edit', user.id)}>
                     <EditIcon />
                   </IconButton>
                   <IconButton onClick={() => handleDeleteUser(user.id)}>
@@ -117,7 +143,7 @@ const Users: React.FC = () => {
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
       >
-        <Box
+       <Box
           sx={{
             position: 'absolute',
             top: '50%',
@@ -130,18 +156,23 @@ const Users: React.FC = () => {
           }}
         >
           <Typography id="modal-title" variant="h6" component="h2">
-            Add User
+            {modalMode === 'add' ? 'Add User' : 'Edit User'}
           </Typography>
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel htmlFor="name">Name</InputLabel>
             <Input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-            </FormControl>
-            <FormControl fullWidth sx={{ mt: 2 }}>
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel htmlFor="email">Email</InputLabel>
             <Input id="email" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
           </FormControl>
-          <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={handleAddUser}>
-            ADD
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+            onClick={modalMode === 'add' ? handleAddUser : handleEditUser}
+          >
+            {modalMode === 'add' ? 'ADD' : 'EDIt'}
           </Button>
         </Box>
       </Modal>
