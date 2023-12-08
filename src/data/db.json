@@ -1,10 +1,19 @@
-
 {
-    "users": [
-      { "id": 1, "name": "Chetna", "email": "chetna@example.com" },
-      { "id": 2, "name": "Tusshar", "email": "tusshar@example.com" },
-      { "id": 3, "name": "Ranjita", "email": "ranjita@example.com" },
-      { "id": 4, "name": "Promila", "email": "promila@example.com" }  
-    ]
-  }
-  
+  "users": [
+    {
+      "id": 1,
+      "name": "nike",
+      "email": "nike.01@gmail.com"
+    },
+    {
+      "id": 2,
+      "name": "adidas",
+      "email": "adidas@example.com "
+    },
+    {
+      "id": 3,
+      "name": "apple",
+      "email": "apple@example.com "
+    }
+  ]
+}
